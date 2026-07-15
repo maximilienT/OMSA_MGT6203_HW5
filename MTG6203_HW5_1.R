@@ -39,7 +39,7 @@ terms(tm, 10)
 
 # 8. Pick a news article and analyze
 as.character(corp_data[2]$content)
-barplot(theta[2,])
+barplot(theta[1082,])
 
-top.terms.prob <- sort(beta[16,], decreasing=TRUE)[1:50]
+top.terms.prob <- sort(beta[4,], decreasing=TRUE)[1:50]
 wordcloud(names(top.terms.prob), top.terms.prob, random.order=FALSE)
