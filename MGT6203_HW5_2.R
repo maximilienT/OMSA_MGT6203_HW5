@@ -1,5 +1,5 @@
 # 1. Load and install packages
-install.packages("neuralnet")
+#install.packages("neuralnet")
 library(neuralnet)
 
 mydata <- read.csv("Smarket.csv")
@@ -40,15 +40,38 @@ p1 <- exp(p1)/(1+exp(p1))
 compute(nn, data.test[1,])
 
 # 9. Create more complex NN
+nn <- neuralnet(Up ~ ., data = data.train, hidden = c(4,2), linear.output=FALSE )
+load("Smarket_nn2.Rda")
 
 # 10. Plot NN using plot function, get weights
+plot(nn, rep="best")
 
 # 11. Use compute function
+pred <- compute(nn, data.test)
+compute(nn,data.test[1,])
 
 # 12. Get predictions on test dataset
+pred.class <- rep(FALSE, nrow(data.test))
+pred.class[pred$net.result > 0.5] <- TRUE
 
 # 13. Confusion matrix to compare predicted vs actual
 
+confusion <- table(pred.class, data.test$Up)
+confusion
+
+sum(diag(confusion))/sum(confusion)
+
 # 14. Run a logistic regression model on data
+logit.res <- glm(Up ~ ., data = data.train, family = binomial(link=logit))
+summary(logit.res)
+
+logit.pred.prob <- predict(logit.res, data.test, type="response")
+logit.pred <- rep(FALSE, nrow(data.test))
+logit.pred[logit.pred.prob > 0.5] <- TRUE
+
 
 # 15. Compare accuracy of logistic vs NN
+confusion.logit <- table(logit.pred, data.test$Up)
+confusion.logit
+
+sum(diag(confusion.logit))/sum(confusion.logit)
